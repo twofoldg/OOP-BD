@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long>,
     JpaSpecificationExecutor<Product> {
 
-  Optional<Product> findProductByName(String name);
+  Optional<Product> findProductByNameIgnoreCase(String name);
 
-  Optional<Product> findProductByNameAndCategoryAndWarehouse(String productName, Category category,
+  Optional<Product> findProductByNameIgnoreCaseAndCategoryAndWarehouse(
+      String productName,
+      Category category,
       Warehouse warehouse);
 }

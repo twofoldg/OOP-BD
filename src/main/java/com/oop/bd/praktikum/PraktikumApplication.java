@@ -50,7 +50,7 @@ public class PraktikumApplication {
     }
   };
 
-  // A custom DocumentFilter that allows only integers
+  // A custom DocumentFilter that allows only integers to be entered
   DocumentFilter integerFilter = new DocumentFilter() {
     @Override
     public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
@@ -179,8 +179,9 @@ public class PraktikumApplication {
         );
 
         // If the user has entered a new category name and it's different from the old one
-        if (newCategoryName != null && !newCategoryName.trim().isEmpty() && !newCategoryName.equals(
-            currentCategoryName)) {
+        if (newCategoryName != null &&
+            !newCategoryName.trim().isEmpty() &&
+            !newCategoryName.equals(currentCategoryName)) {
           CategoryDTO categoryDTO = categoryController.getCategoryByName(currentCategoryName);
           categoryDTO.setName(newCategoryName);
           categoryController.updateCategory(currentCategoryName, categoryDTO);

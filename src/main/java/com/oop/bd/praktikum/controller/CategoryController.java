@@ -28,13 +28,11 @@ public class CategoryController {
 
   public void createCategory(CategoryDTO categoryDTO) {
     Category category = modelMapper.map(categoryDTO, Category.class);
-    categoryService.save(category);
+    categoryService.createCategory(category);
   }
 
   public void updateCategory(String currentName, CategoryDTO categoryDTO) {
-    Category existingCategory = categoryService.findCategoryByName(currentName);
-    existingCategory.setName(categoryDTO.getName());
-    categoryService.save(existingCategory);
+  categoryService.updateCategory(currentName, categoryDTO);
   }
 
   public void deleteCategory(String name) throws NotFoundException {

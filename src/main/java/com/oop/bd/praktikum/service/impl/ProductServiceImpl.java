@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public Product findProductByName(String productName) {
-    return productRepository.findProductByName(productName).orElseThrow();
+    return productRepository.findProductByNameIgnoreCase(productName).orElseThrow();
   }
 
   @Override
@@ -70,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public Product findProductByNameAndCategoryAndWarehouse(String productName, Category category,
       Warehouse warehouse) {
-    return productRepository.findProductByNameAndCategoryAndWarehouse(productName, category,
+    return productRepository.findProductByNameIgnoreCaseAndCategoryAndWarehouse(productName, category,
         warehouse).orElseThrow();
   }
 }

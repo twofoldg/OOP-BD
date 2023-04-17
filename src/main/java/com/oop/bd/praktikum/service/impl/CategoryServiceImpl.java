@@ -1,11 +1,13 @@
 package com.oop.bd.praktikum.service.impl;
 
+import com.oop.bd.praktikum.dto.CategoryDTO;
 import com.oop.bd.praktikum.entity.Category;
+import com.oop.bd.praktikum.exceptions.ConflictException;
+import com.oop.bd.praktikum.exceptions.NotFoundException;
 import com.oop.bd.praktikum.repository.CategoryRepository;
 import com.oop.bd.praktikum.service.CategoryService;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,8 +26,9 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public Category findById(Long id) throws NotFoundException {
-    return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException());
+  public Category findById(Long id) {
+    return categoryRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException("Category not found!"));
   }
 
   @Override
@@ -41,6 +44,25 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public Category findCategoryByName(String name) {
-    return categoryRepository.findCategoryByName(name).orElseThrow();
+    return categoryRepository.findCategoryByNameIgnoreCase(name.trim())
+        .orElseThrow(() -> new NotFoundException(String.format("%s already exists!", name)));
+  }
+
+  @Override
+  public void updateCategory(String currentName, CategoryDTO categoryDTO) {
+    Category existingCategory = findCategoryByName(currentName);
+    existingCategory.setName(categoryDTO.getName());
+    save(existingCategory);
+  }
+
+  @Override
+  public void createCategory(Category category) {
+    final String categoryName = category.getName().trim();
+
+    if (categoryRepository.findCategoryByNameIgnoreCase(categoryName).isPresent()) {
+      throw new ConflictException(String.format("%s already exists!", categoryName));
+    }
+
+    save(category);
   }
 }
