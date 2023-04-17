@@ -9,6 +9,8 @@ import com.oop.bd.praktikum.dto.WarehouseDTO;
 import com.oop.bd.praktikum.entity.Category;
 import com.oop.bd.praktikum.entity.Product;
 import com.oop.bd.praktikum.entity.Warehouse;
+import com.oop.bd.praktikum.panel.CategoryPanel;
+import com.oop.bd.praktikum.panel.WarehousePanel;
 import com.oop.bd.praktikum.service.CategoryService;
 import com.oop.bd.praktikum.service.ProductService;
 import com.oop.bd.praktikum.service.WarehouseService;
@@ -36,11 +38,33 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PraktikumApplication {
+
+  private final CategoryController categoryController;
+  private final WarehouseController warehouseController;
+  private final ProductController productController;
+  private final ProductService productService;
+  private final CategoryService categoryService;
+  private final WarehouseService warehouseService;
+  private JComboBox<String> categoryComboBox;
+  private JComboBox<String> warehouseComboBox;
+
+  public PraktikumApplication(CategoryController categoryController,
+      WarehouseController warehouseController,
+      ProductController productController,
+      ProductService productService,
+      CategoryService categoryService,
+      WarehouseService warehouseService) {
+    this.categoryController = categoryController;
+    this.warehouseController = warehouseController;
+    this.productController = productController;
+    this.productService = productService;
+    this.categoryService = categoryService;
+    this.warehouseService = warehouseService;
+  }
 
   // A custom editor to disable editing of the rows
   DefaultCellEditor editor = new DefaultCellEditor(new JTextField()) {
@@ -69,29 +93,6 @@ public class PraktikumApplication {
     }
   };
 
-  private final CategoryController categoryController;
-  private final WarehouseController warehouseController;
-  private final ProductController productController;
-  private final ProductService productService;
-  private final CategoryService categoryService;
-  private final WarehouseService warehouseService;
-  private JComboBox<String> categoryComboBox;
-  private JComboBox<String> warehouseComboBox;
-
-  public PraktikumApplication(CategoryController categoryController,
-      WarehouseController warehouseController,
-      ProductController productController,
-      ProductService productService,
-      CategoryService categoryService,
-      WarehouseService warehouseService) {
-    this.categoryController = categoryController;
-    this.warehouseController = warehouseController;
-    this.productController = productController;
-    this.productService = productService;
-    this.categoryService = categoryService;
-    this.warehouseService = warehouseService;
-  }
-
   public void run() {
     SwingUtilities.invokeLater(() -> {
       JFrame mainFrame = new JFrame("Warehouse Management System");
@@ -100,12 +101,15 @@ public class PraktikumApplication {
       mainFrame.setResizable(false);
 
       JTabbedPane tabbedPane = new JTabbedPane();
+      CategoryPanel categoryPanel = new CategoryPanel();
+      WarehousePanel warehousePanel = new WarehousePanel();
 
       // Add UI components for each entity
-      tabbedPane.addTab("Categories", createCategoryPanel());
-      JPanel productPanel = createProductPanel();
-      tabbedPane.addTab("Products", productPanel);
-      tabbedPane.addTab("Warehouses", createWarehousePanel());
+      tabbedPane.addTab("Categories",
+          categoryPanel.createCategoryPanel(editor, categoryController));
+      tabbedPane.addTab("Products", createProductPanel());
+      tabbedPane.addTab("Warehouses",
+          warehousePanel.createWarehousePanel(editor, warehouseController));
 
       // Add ChangeListener to the JTabbedPane
       tabbedPane.addChangeListener(e -> {
@@ -118,100 +122,6 @@ public class PraktikumApplication {
       mainFrame.add(tabbedPane);
       mainFrame.setVisible(true);
     });
-  }
-
-  private JPanel createCategoryPanel() {
-    JPanel categoryPanel = new JPanel(new BorderLayout());
-
-    // Create and set up the JTable
-    DefaultTableModel categoryTableModel = new DefaultTableModel(new Object[][]{},
-        new String[]{"Name"});
-    JTable categoryTable = new JTable(categoryTableModel);
-
-    //Setting the editor in order to forbid double click editing of the rows
-    categoryTable.setDefaultEditor(Object.class, editor);
-    JScrollPane categoryTableScrollPane = new JScrollPane(categoryTable);
-    categoryPanel.add(categoryTableScrollPane, BorderLayout.CENTER);
-
-    // Create the input panel with JLabels and JTextFields
-    JPanel inputPanel = new JPanel(new GridLayout(1, 2));
-    inputPanel.add(new JLabel("Category Name:"));
-    JTextField categoryNameField = new JTextField();
-    inputPanel.add(categoryNameField);
-    categoryPanel.add(inputPanel, BorderLayout.NORTH);
-
-    // Create the buttons panel with JButtons for CRUD operations and search
-    JPanel buttonsPanel = new JPanel(new GridLayout(1, 3));
-    JButton addButton = new JButton("Add");
-    JButton editButton = new JButton("Edit");
-    JButton deleteButton = new JButton("Delete");
-    buttonsPanel.add(addButton);
-    buttonsPanel.add(editButton);
-    buttonsPanel.add(deleteButton);
-    categoryPanel.add(buttonsPanel, BorderLayout.SOUTH);
-
-    //Add button listener
-    addButton.addActionListener(e -> {
-      String categoryName = categoryNameField.getText();
-      if (!categoryName.trim().isEmpty()) {
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName(categoryName);
-        categoryController.createCategory(categoryDTO);
-        updateCategoryTable(categoryTableModel);
-      }
-    });
-
-    //Edit button listener
-    editButton.addActionListener(e -> {
-      int selectedRow = categoryTable.getSelectedRow();
-      if (selectedRow != -1) {
-        String currentCategoryName = (String) categoryTableModel.getValueAt(selectedRow, 0);
-
-        // Create a dialog to allow the user to edit the category name
-        String newCategoryName = (String) JOptionPane.showInputDialog(
-            categoryPanel,
-            "Edit Category Name:",
-            "Edit Category",
-            JOptionPane.PLAIN_MESSAGE,
-            null,
-            null,
-            currentCategoryName
-        );
-
-        // If the user has entered a new category name and it's different from the old one
-        if (newCategoryName != null &&
-            !newCategoryName.trim().isEmpty() &&
-            !newCategoryName.equals(currentCategoryName)) {
-          CategoryDTO categoryDTO = categoryController.getCategoryByName(currentCategoryName);
-          categoryDTO.setName(newCategoryName);
-          categoryController.updateCategory(currentCategoryName, categoryDTO);
-
-          // Update the JTable with new data
-          updateCategoryTable(categoryTableModel);
-        }
-      } else {
-        JOptionPane.showMessageDialog(categoryPanel, "Please select a row to edit.",
-            "No Row Selected", JOptionPane.WARNING_MESSAGE);
-      }
-    });
-
-    //Delete button listener
-    deleteButton.addActionListener(e -> {
-      int selectedRow = categoryTable.getSelectedRow();
-
-      if (selectedRow >= 0) {
-        String currentCategoryName = (String) categoryTableModel.getValueAt(selectedRow, 0);
-
-        try {
-          categoryController.deleteCategory(currentCategoryName);
-        } catch (NotFoundException ex) {
-          throw new RuntimeException(ex.getMessage());
-        }
-
-        updateCategoryTable(categoryTableModel);
-      }
-    });
-    return categoryPanel;
   }
 
   private JPanel createProductPanel() {
@@ -487,124 +397,6 @@ public class PraktikumApplication {
     List<WarehouseDTO> warehouses = warehouseController.getAllWarehouses();
     for (WarehouseDTO warehouse : warehouses) {
       warehouseComboBox.addItem(warehouse.getName());
-    }
-  }
-
-  private JPanel createWarehousePanel() {
-    JPanel warehousePanel = new JPanel(new BorderLayout());
-
-    // Create and set up the JTable
-    DefaultTableModel warehouseTableModel = new DefaultTableModel(new Object[][]{},
-        new String[]{"Name"});
-    JTable warehouseTable = new JTable(warehouseTableModel);
-
-    //Setting the editor in order to forbid double click editing of the rows
-    warehouseTable.setDefaultEditor(Object.class, editor);
-    JScrollPane warehouseTableScrollPane = new JScrollPane(warehouseTable);
-    warehousePanel.add(warehouseTableScrollPane, BorderLayout.CENTER);
-
-    // Create the input panel with JLabels and JTextFields
-    JPanel inputPanel = new JPanel(new GridLayout(1, 2));
-    inputPanel.add(new JLabel("Warehouse Name:"));
-    JTextField warehouseNameField = new JTextField();
-    inputPanel.add(warehouseNameField);
-    warehousePanel.add(inputPanel, BorderLayout.NORTH);
-
-    // Create the buttons panel with JButtons for CRUD operations and search
-    JPanel buttonsPanel = new JPanel(new GridLayout(1, 3));
-    JButton addButton = new JButton("Add");
-    JButton editButton = new JButton("Edit");
-    JButton deleteButton = new JButton("Delete");
-    buttonsPanel.add(addButton);
-    buttonsPanel.add(editButton);
-    buttonsPanel.add(deleteButton);
-    warehousePanel.add(buttonsPanel, BorderLayout.SOUTH);
-
-    // Add button listener and other listeners as needed
-    addButton.addActionListener(e -> {
-      String warehouseName = warehouseNameField.getText();
-      if (!warehouseName.trim().isEmpty()) {
-        WarehouseDTO warehouseDTO = new WarehouseDTO();
-        warehouseDTO.setName(warehouseName);
-        warehouseController.createWarehouse(warehouseDTO);
-        updateWarehouseTable(warehouseTableModel);
-      }
-    });
-
-    editButton.addActionListener(e -> {
-      int selectedRow = warehouseTable.getSelectedRow();
-      if (selectedRow != -1) {
-        String currentWarehouseName = (String) warehouseTableModel.getValueAt(selectedRow, 0);
-
-        // Create a dialog to allow the user to edit the warehouse name
-        String newWarehouseName = (String) JOptionPane.showInputDialog(
-            warehousePanel,
-            "Edit Warehouse Name:",
-            "Edit Warehouse",
-            JOptionPane.PLAIN_MESSAGE,
-            null,
-            null,
-            currentWarehouseName
-        );
-
-        // If the user has entered a new warehouse name and it's different from the old one
-        if (newWarehouseName != null && !newWarehouseName.trim().isEmpty()
-            && !newWarehouseName.equals(
-            currentWarehouseName)) {
-          WarehouseDTO warehouseDTO = warehouseController.getWarehouseByName(currentWarehouseName);
-          warehouseDTO.setName(newWarehouseName);
-          warehouseController.updateWarehouse(currentWarehouseName, warehouseDTO);
-
-          // Update the JTable with new data
-          updateWarehouseTable(warehouseTableModel);
-        }
-      } else {
-        JOptionPane.showMessageDialog(warehousePanel, "Please select a row to edit.",
-            "No Row Selected", JOptionPane.WARNING_MESSAGE);
-      }
-    });
-
-    deleteButton.addActionListener(e -> {
-      int selectedRow = warehouseTable.getSelectedRow();
-
-      if (selectedRow >= 0) {
-        String currentWarehouseName = (String) warehouseTableModel.getValueAt(selectedRow, 0);
-
-        try {
-          warehouseController.deleteWarehouse(currentWarehouseName);
-        } catch (NotFoundException ex) {
-          throw new RuntimeException(ex.getMessage());
-        }
-
-        updateWarehouseTable(warehouseTableModel);
-      }
-    });
-
-    return warehousePanel;
-  }
-
-
-  private void updateCategoryTable(DefaultTableModel categoryTableModel) {
-    List<CategoryDTO> categories = categoryController.getAllCategories();
-
-    // Clear the table model
-    categoryTableModel.setRowCount(0);
-
-    // Add the fetched categories to the table model
-    for (CategoryDTO category : categories) {
-      categoryTableModel.addRow(new Object[]{category.getName()});
-    }
-  }
-
-  private void updateWarehouseTable(DefaultTableModel warehouseTableModel) {
-    List<WarehouseDTO> warehouses = warehouseController.getAllWarehouses();
-
-    // Clear the table model
-    warehouseTableModel.setRowCount(0);
-
-    // Add the fetched warehouses to the table model
-    for (WarehouseDTO warehouse : warehouses) {
-      warehouseTableModel.addRow(new Object[]{warehouse.getName()});
     }
   }
 

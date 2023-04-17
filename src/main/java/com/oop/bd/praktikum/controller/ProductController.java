@@ -37,8 +37,7 @@ public class ProductController {
     Warehouse warehouse = warehouseService.findWarehouseByName(productDTO.getWarehouseName());
     product.setCategory(category);
     product.setWarehouse(warehouse);
-    Product newProduct = productService.save(product);
-    modelMapper.map(newProduct, ProductDTO.class);
+    productService.save(product);
   }
 
   public List<ProductDTO> getAllProducts() {
@@ -46,7 +45,7 @@ public class ProductController {
         .map(product -> modelMapper.map(product, ProductDTO.class)).toList();
   }
 
-  public ProductDTO updateProductByName(String name, ProductDTO productDTO) {
+  public void updateProductByName(String name, ProductDTO productDTO) {
     Product existingProduct = productService.findProductByName(name);
     Category category = categoryService.findCategoryByName(productDTO.getCategoryName());
     Warehouse warehouse = warehouseService.findWarehouseByName(productDTO.getWarehouseName());
@@ -56,7 +55,6 @@ public class ProductController {
     existingProduct.setWarehouse(warehouse);
     existingProduct.setQuantity(productDTO.getQuantity());
     productService.save(existingProduct);
-    return modelMapper.map(existingProduct, ProductDTO.class);
   }
 
   public void deleteProduct(Long id) {
