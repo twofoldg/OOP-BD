@@ -21,7 +21,6 @@ public class CategoryPanel {
   public JPanel createCategoryPanel(DefaultCellEditor editor, CategoryController categoryController) {
     JPanel categoryPanel = new JPanel(new BorderLayout());
 
-    // Create and set up the JTable
     DefaultTableModel categoryTableModel = new DefaultTableModel(new Object[][]{},
         new String[]{"Name"});
     JTable categoryTable = new JTable(categoryTableModel);
@@ -31,14 +30,12 @@ public class CategoryPanel {
     JScrollPane categoryTableScrollPane = new JScrollPane(categoryTable);
     categoryPanel.add(categoryTableScrollPane, BorderLayout.CENTER);
 
-    // Create the input panel with JLabels and JTextFields
     JPanel inputPanel = new JPanel(new GridLayout(1, 2));
     inputPanel.add(new JLabel("Category Name:"));
     JTextField categoryNameField = new JTextField();
     inputPanel.add(categoryNameField);
     categoryPanel.add(inputPanel, BorderLayout.NORTH);
 
-    // Create the buttons panel with JButtons for CRUD operations and search
     JPanel buttonsPanel = new JPanel(new GridLayout(1, 3));
     JButton addButton = new JButton("Add");
     JButton editButton = new JButton("Edit");
@@ -65,7 +62,6 @@ public class CategoryPanel {
       if (selectedRow != -1) {
         String currentCategoryName = (String) categoryTableModel.getValueAt(selectedRow, 0);
 
-        // Create a dialog to allow the user to edit the category name
         String newCategoryName = (String) JOptionPane.showInputDialog(
             categoryPanel,
             "Edit Category Name:",
@@ -114,8 +110,6 @@ public class CategoryPanel {
 
   private void updateCategoryTable(DefaultTableModel categoryTableModel, CategoryController categoryController) {
     List<CategoryDTO> categories = categoryController.getAllCategories();
-
-    // Clear the table model
     categoryTableModel.setRowCount(0);
 
     // Add the fetched categories to the table model

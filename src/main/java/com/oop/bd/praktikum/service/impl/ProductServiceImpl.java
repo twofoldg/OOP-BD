@@ -36,11 +36,11 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public Product save(Product product) {
+  public void save(Product product) {
     if (product.getCategory() != null && product.getCategory().getId() == null) {
       categoryRepository.save(product.getCategory());
     }
-    return productRepository.save(product);
+    productRepository.save(product);
   }
 
   @Override

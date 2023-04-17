@@ -10,7 +10,7 @@ public interface WarehouseService {
 
   Warehouse findById(Long id) throws NotFoundException;
 
-  Warehouse save(Warehouse warehouse);
+  void save(Warehouse warehouse);
 
   void deleteById(Long id) throws NotFoundException;
 

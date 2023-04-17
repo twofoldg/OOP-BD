@@ -104,14 +104,12 @@ public class PraktikumApplication {
       CategoryPanel categoryPanel = new CategoryPanel();
       WarehousePanel warehousePanel = new WarehousePanel();
 
-      // Add UI components for each entity
       tabbedPane.addTab("Categories",
           categoryPanel.createCategoryPanel(editor, categoryController));
       tabbedPane.addTab("Products", createProductPanel());
       tabbedPane.addTab("Warehouses",
           warehousePanel.createWarehousePanel(editor, warehouseController));
 
-      // Add ChangeListener to the JTabbedPane
       tabbedPane.addChangeListener(e -> {
         if (tabbedPane.getSelectedIndex() == 1) { // If the selected tab is Products
           fillCategoryComboBox(categoryComboBox); // Use the reference to the combo box
@@ -127,17 +125,14 @@ public class PraktikumApplication {
   private JPanel createProductPanel() {
     JPanel productPanel = new JPanel(new BorderLayout());
 
-    // Create and set up the JTable
     DefaultTableModel productTableModel = new DefaultTableModel(new Object[][]{},
         new String[]{"Name", "Quantity", "Category", "Warehouse"});
     JTable productTable = new JTable(productTableModel);
 
-    //Setting the editor in order to forbid double click editing of the rows
     productTable.setDefaultEditor(Object.class, editor);
     JScrollPane productTableScrollPane = new JScrollPane(productTable);
     productPanel.add(productTableScrollPane, BorderLayout.CENTER);
 
-    // Create the input panel with JLabels, JTextFields, and JComboBoxes
     JPanel inputPanel = new JPanel(new GridLayout(1, 8));
 
     inputPanel.add(new JLabel("Product Name:"));
@@ -150,7 +145,7 @@ public class PraktikumApplication {
     inputPanel.add(productQuantityField);
 
     inputPanel.add(new JLabel("Category:"));
-    this.categoryComboBox = new JComboBox<>(); // Save the reference to the combo box
+    this.categoryComboBox = new JComboBox<>();
     inputPanel.add(categoryComboBox);
 
     inputPanel.add(new JLabel("Warehouse:"));
@@ -164,7 +159,6 @@ public class PraktikumApplication {
     });
     inputPanel.add(refreshButton);
 
-    // Create the buttons panel with JButtons for CRUD operations and search
     JPanel buttonsPanel = new JPanel(new GridLayout(1, 3));
     JButton addButton = new JButton("Add");
     JButton editButton = new JButton("Edit");
@@ -177,7 +171,6 @@ public class PraktikumApplication {
     buttonsPanel.add(deleteButton);
     productPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
-    // Add button listener and other listeners as needed
     addButton.addActionListener(e -> {
       String productName = productNameField.getText();
       String productQuantity = productQuantityField.getText();
@@ -197,7 +190,6 @@ public class PraktikumApplication {
       }
     });
 
-    // Edit button listener
     editButton.addActionListener(e -> {
 
       String[] categories = categoryController.getAllCategories().stream()
@@ -213,12 +205,10 @@ public class PraktikumApplication {
         String currentProductName = (String) productTableModel.getValueAt(selectedRow, 0);
         ProductDTO productDTO = productController.getProductByName(currentProductName);
 
-        // Create a custom JDialog with input components for each field
         JDialog editProductDialog = new JDialog((Frame) null, "Edit Product", true);
         editProductDialog.setSize(300, 200);
         editProductDialog.setLayout(new GridLayout(5, 2));
 
-        // Create and add input components for each field
         JLabel nameLabel = new JLabel("Name:");
         JTextField nameField = new JTextField(productDTO.getName());
         editProductDialog.add(nameLabel);
@@ -289,12 +279,12 @@ public class PraktikumApplication {
     });
 
     searchButton.addActionListener(e -> {
-      // Create a custom JDialog with input components for each search criterion
+      // Creates a custom JDialog with input components for each search criterion
       JDialog searchProductDialog = new JDialog((Frame) null, "Search Product", true);
       searchProductDialog.setSize(300, 200);
       searchProductDialog.setLayout(new GridLayout(5, 2));
 
-      // Create and add input components for each criterion
+      // Creates and adds input components for each criterion
       JLabel nameLabel = new JLabel("Name:");
       JTextField nameField = new JTextField();
       searchProductDialog.add(nameLabel);
@@ -326,7 +316,7 @@ public class PraktikumApplication {
       searchProductDialog.add(warehouseLabel);
       searchProductDialog.add(warehouseSearchBox);
 
-      // Add OK and Cancel buttons
+      // Adding of OK and Cancel buttons
       JButton okButton = new JButton("Search");
       JButton cancelButton = new JButton("Cancel");
       searchProductDialog.add(okButton);
@@ -344,7 +334,7 @@ public class PraktikumApplication {
         String searchCategory = (String) categorySearchBox.getSelectedItem();
         String searchWarehouse = (String) warehouseSearchBox.getSelectedItem();
 
-        // Search for products using the input values (you need to create this method in the ProductController)
+        // Search for products using the input values
         List<ProductDTO> filteredProducts = productController.searchProducts(searchName,
             searchQuantity, searchCategory, searchWarehouse);
 
@@ -385,16 +375,18 @@ public class PraktikumApplication {
   }
 
   private void fillCategoryComboBox(JComboBox<String> categoryComboBox) {
-    categoryComboBox.removeAllItems(); // Clear the combo box
+    categoryComboBox.removeAllItems();
     List<CategoryDTO> categories = categoryController.getAllCategories();
+
     for (CategoryDTO category : categories) {
       categoryComboBox.addItem(category.getName());
     }
   }
 
   private void fillWarehouseComboBox(JComboBox<String> warehouseComboBox) {
-    warehouseComboBox.removeAllItems(); // Clear the combo box
+    warehouseComboBox.removeAllItems();
     List<WarehouseDTO> warehouses = warehouseController.getAllWarehouses();
+
     for (WarehouseDTO warehouse : warehouses) {
       warehouseComboBox.addItem(warehouse.getName());
     }
@@ -404,7 +396,6 @@ public class PraktikumApplication {
 
     List<ProductDTO> products = productController.getAllProducts();
 
-    // Clear the table model
     productTableModel.setRowCount(0);
 
     // Add the fetched warehouses to the table model
@@ -416,7 +407,6 @@ public class PraktikumApplication {
   }
 
   private void updateProductTable(DefaultTableModel productTableModel, List<ProductDTO> products) {
-    // Clear the table model
     productTableModel.setRowCount(0);
 
     // Add the filtered products to the table model

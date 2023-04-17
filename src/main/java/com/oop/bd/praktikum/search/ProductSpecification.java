@@ -28,7 +28,6 @@ public class ProductSpecification {
       if (categoryName == null || categoryName.isEmpty()) {
         return cb.conjunction(); // return "1=1" condition when categoryName is null
       }
-      // Assuming the "category" field is an object that has a "name" property
       return cb.equal(root.get("category").get("name"), categoryName);
     };
   }
@@ -38,7 +37,6 @@ public class ProductSpecification {
       if (warehouseName == null || warehouseName.isEmpty()) {
         return cb.conjunction(); // return "1=1" condition when warehouseName is null
       }
-      // Assuming the "warehouse" field is an object that has a "name" property
       return cb.equal(root.get("warehouse").get("name"), warehouseName);
     };
   }

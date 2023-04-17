@@ -11,7 +11,7 @@ public interface ProductService {
 
   Product findById(Long id);
 
-  Product save(Product product);
+  void save(Product product);
 
   void deleteById(Long id);
 

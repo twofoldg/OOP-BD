@@ -11,7 +11,7 @@ public interface CategoryService {
 
   Category findById(Long id);
 
-  Category save(Category category);
+  void save(Category category);
 
   void deleteById(Long id) throws NotFoundException;
 
