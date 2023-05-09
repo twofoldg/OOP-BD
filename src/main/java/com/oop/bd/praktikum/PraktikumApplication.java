@@ -37,7 +37,7 @@ public class PraktikumApplication {
     private final CategoryService categoryService;
     private final WarehouseService warehouseService;
 
-    // A custom editor to disable editing with double-click on a rows
+    // A custom editor to disable editing rows with a double-click
     DefaultCellEditor editor = new DefaultCellEditor(new JTextField()) {
         @Override
         public boolean isCellEditable(EventObject e) {
