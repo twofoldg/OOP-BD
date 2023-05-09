@@ -6,6 +6,7 @@
 - Gradle
 - Spring Boot
 - Java SwingFx
+- H2 in-memory database
 
 Изготвили:
 
