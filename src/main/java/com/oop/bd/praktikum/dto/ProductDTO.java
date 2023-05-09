@@ -6,9 +6,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ProductDTO {
-
-  private String name;
-  private int quantity;
-  private String warehouseName;
-  private String categoryName;
+    private String name;
+    private int quantity;
+    private String warehouseName;
+    private String categoryName;
 }
