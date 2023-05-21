@@ -37,14 +37,9 @@ public class CategoryController {
         categoryService.updateCategory(currentName, newCategoryName);
     }
 
-    public void deleteCategory(String name) throws NotFoundException {
+    public void deleteCategory(String name) {
         Category category = categoryService.findCategoryByName(name);
 
         categoryService.deleteById(category.getId());
-    }
-
-    public CategoryDTO getCategoryByName(String categoryName) {
-        Category category = categoryService.findCategoryByName(categoryName);
-        return modelMapper.map(category, CategoryDTO.class);
     }
 }

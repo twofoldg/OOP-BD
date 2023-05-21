@@ -19,28 +19,34 @@ public class ModelMapperConfig {
         final ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+        // Category -> CategoryDTO
         modelMapper.
                 typeMap(Category.class, CategoryDTO.class)
                 .addMapping(Category::getName, CategoryDTO::setName);
 
+        // Product -> ProductDTO
         modelMapper.typeMap(Product.class, ProductDTO.class)
                 .addMapping(Product::getName, ProductDTO::setName)
                 .addMapping(Product::getCategoryName, ProductDTO::setCategoryName)
                 .addMapping(Product::getWarehouseName, ProductDTO::setWarehouseName)
                 .addMapping(Product::getQuantity, ProductDTO::setQuantity);
 
+        // Warehouse -> WarehouseDTO
         modelMapper.typeMap(Warehouse.class, WarehouseDTO.class)
                 .addMapping(Warehouse::getName, WarehouseDTO::setName);
 
+        // WarehouseDTO -> Warehouse
         modelMapper.typeMap(WarehouseDTO.class, Warehouse.class)
                 .addMapping(WarehouseDTO::getName, Warehouse::setName);
 
+        // ProductDTO -> Product
         modelMapper.typeMap(ProductDTO.class, Product.class)
                 .addMapping(ProductDTO::getName, Product::setName)
                 .addMapping(ProductDTO::getCategoryName, Product::setCategory)
                 .addMapping(ProductDTO::getWarehouseName, Product::setWarehouse)
                 .addMapping(ProductDTO::getQuantity, Product::setQuantity);
 
+        // CategoryDTO -> Category
         modelMapper.typeMap(CategoryDTO.class, Category.class)
                 .addMapping(CategoryDTO::getName, Category::setName);
 

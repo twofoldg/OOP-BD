@@ -68,8 +68,10 @@ public class ProductController {
                                            String searchCategory,
                                            String searchWarehouse) {
 
-        return productService
-                .searchProducts(searchName, searchQuantity, searchCategory, searchWarehouse)
+        List<Product> foundProducts =
+                productService.searchProducts(searchName, searchQuantity, searchCategory, searchWarehouse);
+
+        return foundProducts
                 .stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();

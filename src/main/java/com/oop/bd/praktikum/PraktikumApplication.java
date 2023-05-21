@@ -37,7 +37,7 @@ public class PraktikumApplication {
     private final CategoryService categoryService;
     private final WarehouseService warehouseService;
 
-    // A custom editor to disable editing rows with a double-click
+    // A custom editor to disable editing rows with a double click
     DefaultCellEditor editor = new DefaultCellEditor(new JTextField()) {
         @Override
         public boolean isCellEditable(EventObject e) {
@@ -353,13 +353,17 @@ public class PraktikumApplication {
 
             // OK button listener
             okButton.addActionListener(event -> {
+
                 String searchName = nameField.getText().trim();
+
                 Integer searchQuantity;
+
                 if (quantityField.getText().trim().isEmpty()) {
                     searchQuantity = null;
                 } else {
                     searchQuantity = Integer.valueOf(quantityField.getText().trim());
                 }
+
                 String searchCategory = (String) categorySearchBox.getSelectedItem();
                 String searchWarehouse = (String) warehouseSearchBox.getSelectedItem();
 
@@ -389,7 +393,6 @@ public class PraktikumApplication {
                 String currentProductWarehouseName = (String) productTableModel.getValueAt(selectedRow, 3);
 
                 Category currentCategory = categoryService.findCategoryByName(currentProductCategoryName);
-
                 Warehouse currentWarehouse = warehouseService.findWarehouseByName(currentProductWarehouseName);
 
                 Product currentProduct =
@@ -438,7 +441,6 @@ public class PraktikumApplication {
 
         // remove all existing rows from the table model
         productTableModel.setRowCount(0);
-
 
         // iterate through each product and add its information to a new row in the table model
         for (ProductDTO product : products) {

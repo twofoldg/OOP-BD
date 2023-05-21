@@ -2,7 +2,6 @@ package com.oop.bd.praktikum.panel;
 
 import com.oop.bd.praktikum.controller.CategoryController;
 import com.oop.bd.praktikum.dto.CategoryDTO;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -136,12 +135,7 @@ public class CategoryPanel {
                 String currentCategoryName = (String) categoryTableModel.getValueAt(selectedRow, 0);
 
                 // Try to delete the category using the CategoryController
-                try {
-                    categoryController.deleteCategory(currentCategoryName);
-                } catch (NotFoundException ex) {
-                    // Throw a NotFoundException if the category is not found
-                    throw new com.oop.bd.praktikum.exceptions.NotFoundException(ex.getMessage());
-                }
+                categoryController.deleteCategory(currentCategoryName);
 
                 // Update the JTable with new data
                 updateCategoryTable(categoryTableModel, categoryController);
@@ -152,7 +146,7 @@ public class CategoryPanel {
     }
 
     private void updateCategoryTable(DefaultTableModel categoryTableModel, CategoryController categoryController) {
-        // Get all the categories from the CategoryController
+        // Get all the categories from the database
         List<CategoryDTO> categories = categoryController.getAllCategories();
 
         // Reset the table row count

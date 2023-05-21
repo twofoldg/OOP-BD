@@ -7,6 +7,7 @@ public class ProductSpecification {
 
     // Specification for filtering products based on name
     public static Specification<Product> productNameContains(String name) {
+
         return (root, query, criteriaBuilder) -> {
 
             // If the name is null or empty, return a "1=1" condition (always true)
@@ -21,6 +22,7 @@ public class ProductSpecification {
 
     // Specification for filtering products based on quantity
     public static Specification<Product> quantityEquals(Integer quantity) {
+
         return (root, query, cb) -> {
 
             // If the quantity is null, return a "1=1" condition (always true)
@@ -35,6 +37,7 @@ public class ProductSpecification {
 
     // Specification for filtering products based on category name
     public static Specification<Product> categoryEquals(String categoryName) {
+
         return (root, query, cb) -> {
 
             // If the categoryName is null or empty, return a "1=1" condition (always true)
@@ -49,6 +52,7 @@ public class ProductSpecification {
 
     // Specification for filtering products based on warehouse name
     public static Specification<Product> warehouseEquals(String warehouseName) {
+
         return (root, query, cb) -> {
 
             // If the warehouseName is null or empty, return a "1=1" condition (always true)
