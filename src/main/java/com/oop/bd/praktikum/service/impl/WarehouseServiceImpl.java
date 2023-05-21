@@ -25,18 +25,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Warehouse findById(Long id) {
-        return warehouseRepository.findById(id).orElseThrow(() -> new NotFoundException("Warehouse Not Found!"));
-    }
-
-    @Override
     public void save(Warehouse warehouse) {
         warehouseRepository.saveAndFlush(warehouse);
     }
 
     @Override
-    public void deleteById(Long id) {
-        Warehouse warehouse = findById(id);
+    public void deleteByName(String name) {
+        Warehouse warehouse = findWarehouseByName(name);
         warehouseRepository.deleteById(warehouse.getId());
     }
 

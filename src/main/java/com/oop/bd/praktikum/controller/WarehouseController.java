@@ -4,7 +4,6 @@ import com.oop.bd.praktikum.dto.WarehouseDTO;
 import com.oop.bd.praktikum.entity.Warehouse;
 import com.oop.bd.praktikum.service.WarehouseService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -37,9 +36,7 @@ public class WarehouseController {
         warehouseService.updateWarehouse(currentName, newWarehouseName);
     }
 
-    public void deleteWarehouse(String name) throws NotFoundException {
-        Warehouse warehouse = warehouseService.findWarehouseByName(name);
-
-        warehouseService.deleteById(warehouse.getId());
+    public void deleteWarehouse(String name) {
+        warehouseService.deleteByName(name);
     }
 }

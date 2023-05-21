@@ -8,11 +8,9 @@ public interface WarehouseService {
 
     List<Warehouse> findAll();
 
-    Warehouse findById(Long id);
-
     void save(Warehouse warehouse);
 
-    void deleteById(Long id);
+    void deleteByName(String name);
 
     Warehouse findWarehouseByName(String name);
 

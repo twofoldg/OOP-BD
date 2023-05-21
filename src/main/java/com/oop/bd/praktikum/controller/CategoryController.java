@@ -4,7 +4,6 @@ import com.oop.bd.praktikum.dto.CategoryDTO;
 import com.oop.bd.praktikum.entity.Category;
 import com.oop.bd.praktikum.service.CategoryService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -38,8 +37,6 @@ public class CategoryController {
     }
 
     public void deleteCategory(String name) {
-        Category category = categoryService.findCategoryByName(name);
-
-        categoryService.deleteById(category.getId());
+        categoryService.deleteByName(name);
     }
 }

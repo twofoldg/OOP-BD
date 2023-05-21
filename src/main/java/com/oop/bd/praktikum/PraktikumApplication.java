@@ -194,7 +194,8 @@ public class PraktikumApplication {
 
             if (!productName.trim().isEmpty() &&
                     !productQuantity.isEmpty() &&
-                    categoryName != null && warehouseName != null) {
+                    categoryName != null &&
+                    warehouseName != null) {
                 ProductDTO productDTO = new ProductDTO();
                 productDTO.setName(productName);
                 productDTO.setQuantity(Integer.parseInt(productQuantity));

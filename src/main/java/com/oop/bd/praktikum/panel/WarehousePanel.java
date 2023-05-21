@@ -2,19 +2,10 @@ package com.oop.bd.praktikum.panel;
 
 import com.oop.bd.praktikum.controller.WarehouseController;
 import com.oop.bd.praktikum.dto.WarehouseDTO;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.util.List;
 
 public class WarehousePanel {
@@ -133,13 +124,7 @@ public class WarehousePanel {
                 // Get the current category name from the table model
                 String currentWarehouseName = (String) warehouseTableModel.getValueAt(selectedRow, 0);
 
-                // Try to delete the category using the CategoryController
-                try {
-                    warehouseController.deleteWarehouse(currentWarehouseName);
-                } catch (NotFoundException ex) {
-                    // Throw the custom NotFoundException if the category is not found
-                    throw new com.oop.bd.praktikum.exceptions.NotFoundException(ex.getMessage());
-                }
+                warehouseController.deleteWarehouse(currentWarehouseName);
 
                 updateWarehouseTable(warehouseTableModel, warehouseController);
             }

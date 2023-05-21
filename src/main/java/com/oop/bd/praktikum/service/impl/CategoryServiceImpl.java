@@ -1,6 +1,5 @@
 package com.oop.bd.praktikum.service.impl;
 
-import com.oop.bd.praktikum.dto.CategoryDTO;
 import com.oop.bd.praktikum.entity.Category;
 import com.oop.bd.praktikum.exceptions.ConflictException;
 import com.oop.bd.praktikum.exceptions.NotFoundException;
@@ -27,19 +26,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category findById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found!"));
-    }
-
-    @Override
     public void save(Category category) {
         categoryRepository.saveAndFlush(category);
     }
 
     @Override
-    public void deleteById(Long id) {
-        Category category = findById(id);
+    public void deleteByName(String name) {
+        Category category = findCategoryByName(name);
         categoryRepository.deleteById(category.getId());
     }
 
