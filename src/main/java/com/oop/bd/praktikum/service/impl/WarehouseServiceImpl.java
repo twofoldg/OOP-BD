@@ -45,4 +45,11 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.findWarehouseByName(name)
                 .orElseThrow(() -> new com.oop.bd.praktikum.exceptions.NotFoundException("Warehouse Not Found!"));
     }
+
+    @Override
+    public void updateWarehouse(String currentName, String newWarehouseName) {
+        Warehouse existingWarehouse = findWarehouseByName(currentName);
+        existingWarehouse.setName(newWarehouseName);
+        save(existingWarehouse);
+    }
 }

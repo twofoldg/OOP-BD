@@ -63,10 +63,13 @@ public class ProductController {
         productService.deleteById(id);
     }
 
-    public List<ProductDTO> searchProducts(String searchName, Integer searchQuantity,
-                                           String searchCategory, String searchWarehouse) {
+    public List<ProductDTO> searchProducts(String searchName,
+                                           Integer searchQuantity,
+                                           String searchCategory,
+                                           String searchWarehouse) {
 
-        return productService.searchProducts(searchName, searchQuantity, searchCategory, searchWarehouse)
+        return productService
+                .searchProducts(searchName, searchQuantity, searchCategory, searchWarehouse)
                 .stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();

@@ -60,7 +60,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> searchProducts(String name, Integer quantity, String categoryName, String warehouseName) {
-        Specification<Product> spec = Specification
+        Specification<Product> spec =
+                Specification
                 .where(ProductSpecification.productNameContains(name))
                 .and(ProductSpecification.quantityEquals(quantity))
                 .and(ProductSpecification.categoryEquals(categoryName))

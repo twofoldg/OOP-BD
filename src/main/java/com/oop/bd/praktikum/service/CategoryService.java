@@ -18,7 +18,7 @@ public interface CategoryService {
 
     Category findCategoryByName(String name);
 
-    void updateCategory(String currentName, CategoryDTO categoryDTO);
+    void updateCategory(String currentName, String newCategoryName);
 
     void createCategory(Category category);
 }

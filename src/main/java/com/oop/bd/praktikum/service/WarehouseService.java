@@ -15,4 +15,6 @@ public interface WarehouseService {
     void deleteById(Long id);
 
     Warehouse findWarehouseByName(String name);
+
+    void updateWarehouse(String currentName, String newWarehouseName);
 }

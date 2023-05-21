@@ -65,6 +65,7 @@ public class PraktikumApplication {
             }
         }
     };
+
     private JComboBox<String> categoryComboBox;
     private JComboBox<String> warehouseComboBox;
 
@@ -191,7 +192,8 @@ public class PraktikumApplication {
             String categoryName = (String) categoryComboBox.getSelectedItem();
             String warehouseName = (String) warehouseComboBox.getSelectedItem();
 
-            if (!productName.trim().isEmpty() && !productQuantity.trim().isEmpty() &&
+            if (!productName.trim().isEmpty() &&
+                    !productQuantity.isEmpty() &&
                     categoryName != null && warehouseName != null) {
                 ProductDTO productDTO = new ProductDTO();
                 productDTO.setName(productName);
@@ -208,13 +210,15 @@ public class PraktikumApplication {
 
             // Retrieve all categories from the categoryController as a stream,
             // map each CategoryDTO to its name, and collect the names into a new String array
-            String[] categories = categoryController.getAllCategories().stream()
+            String[] categories = categoryController.getAllCategories()
+                    .stream()
                     .map(CategoryDTO::getName)
                     .toArray(String[]::new);
 
             // Retrieve all warehouses from the warehouseController as a stream,
             // map each WarehouseDTO to its name, and collect the names into a new String array
-            String[] warehouses = warehouseController.getAllWarehouses().stream()
+            String[] warehouses = warehouseController.getAllWarehouses()
+                    .stream()
                     .map(WarehouseDTO::getName)
                     .toArray(String[]::new);
 
@@ -270,8 +274,10 @@ public class PraktikumApplication {
                     String newCategoryName = (String) categoryEditBox.getSelectedItem();
                     String newWarehouseName = (String) warehouseEditBox.getSelectedItem();
 
-                    if (!newName.isEmpty() && newQuantity >= 0 && !newCategoryName.isEmpty()
-                            && !newWarehouseName.isEmpty()) {
+                    if (!newName.isEmpty() &&
+                            newQuantity >= 0 &&
+                            !newCategoryName.isEmpty() &&
+                            !newWarehouseName.isEmpty()) {
                         productDTO.setName(newName);
                         productDTO.setQuantity(newQuantity);
                         productDTO.setCategoryName(newCategoryName);
@@ -358,8 +364,8 @@ public class PraktikumApplication {
                 String searchWarehouse = (String) warehouseSearchBox.getSelectedItem();
 
                 // Search for products using the input values
-                List<ProductDTO> filteredProducts = productController.searchProducts(searchName,
-                        searchQuantity, searchCategory, searchWarehouse);
+                List<ProductDTO> filteredProducts =
+                        productController.searchProducts(searchName, searchQuantity, searchCategory, searchWarehouse);
 
                 // Update the JTable with the filtered results
                 updateProductTable(productTableModel, filteredProducts);
@@ -383,11 +389,12 @@ public class PraktikumApplication {
                 String currentProductWarehouseName = (String) productTableModel.getValueAt(selectedRow, 3);
 
                 Category currentCategory = categoryService.findCategoryByName(currentProductCategoryName);
-                Warehouse currentWarehouse = warehouseService.findWarehouseByName(
-                        currentProductWarehouseName);
+
+                Warehouse currentWarehouse = warehouseService.findWarehouseByName(currentProductWarehouseName);
+
                 Product currentProduct =
-                        productService.findProductByNameAndCategoryAndWarehouse(currentProductName,
-                                currentCategory, currentWarehouse);
+                        productService.findProductByNameAndCategoryAndWarehouse(currentProductName, currentCategory, currentWarehouse);
+
                 productController.deleteProduct(currentProduct.getId());
 
                 updateProductTable(productTableModel);
@@ -399,8 +406,10 @@ public class PraktikumApplication {
 
     // This method fills with all the available categories fetched from a CategoryController instance.
     private void fillCategoryComboBox(JComboBox<String> categoryComboBox) {
-        categoryComboBox.removeAllItems(); // remove all existing items in the combo box
-        List<CategoryDTO> categories = categoryController.getAllCategories(); // fetch all categories
+        // remove all existing items in the combo box
+        categoryComboBox.removeAllItems();
+        // fetch all categories
+        List<CategoryDTO> categories = categoryController.getAllCategories();
 
         // iterate through each category and add its name to the combo box
         for (CategoryDTO category : categories) {
@@ -434,12 +443,16 @@ public class PraktikumApplication {
         // iterate through each product and add its information to a new row in the table model
         for (ProductDTO product : products) {
             productTableModel.addRow(
-                    new Object[]{product.getName(), product.getQuantity(), product.getCategoryName(),
-                            product.getWarehouseName()});
+                    new Object[]{
+                            product.getName(),
+                            product.getQuantity(),
+                            product.getCategoryName(),
+                            product.getWarehouseName()
+                    });
         }
     }
 
-    // This method updates a JTable with the given products, which are filtered products fetched from a ProductController instance.
+    // This method updates a JTable with the given products, which are filtered products fetched after a search.
     private void updateProductTable(DefaultTableModel productTableModel, List<ProductDTO> products) {
 
         // remove all existing rows from the table model
@@ -447,13 +460,13 @@ public class PraktikumApplication {
 
         // iterate through each filtered product and add its information to a new row in the table model
         for (ProductDTO product : products) {
-            Object[] rowData = new Object[]{
-                    product.getName(),
-                    product.getQuantity(),
-                    product.getCategoryName(),
-                    product.getWarehouseName()
-            };
-            productTableModel.addRow(rowData);
+            productTableModel.addRow(
+                    new Object[]{
+                            product.getName(),
+                            product.getQuantity(),
+                            product.getCategoryName(),
+                            product.getWarehouseName()
+                    });
         }
     }
 }

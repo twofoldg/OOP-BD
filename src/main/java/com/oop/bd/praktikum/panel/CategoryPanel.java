@@ -111,11 +111,9 @@ public class CategoryPanel {
                 if (newCategoryName != null &&
                         !newCategoryName.trim().isEmpty() &&
                         !newCategoryName.trim().equals(currentCategoryName.trim())) {
-                    CategoryDTO categoryDTO = categoryController.getCategoryByName(currentCategoryName);
-                    categoryDTO.setName(newCategoryName);
 
                     // Update the category using the CategoryController
-                    categoryController.updateCategory(currentCategoryName, categoryDTO);
+                    categoryController.updateCategory(currentCategoryName, newCategoryName);
 
                     // Update the JTable with new data
                     updateCategoryTable(categoryTableModel, categoryController);

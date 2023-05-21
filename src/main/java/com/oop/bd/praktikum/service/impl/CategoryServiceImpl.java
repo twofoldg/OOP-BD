@@ -50,9 +50,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void updateCategory(String currentName, CategoryDTO categoryDTO) {
+    public void updateCategory(String currentName, String newCategoryName) {
         Category existingCategory = findCategoryByName(currentName);
-        existingCategory.setName(categoryDTO.getName());
+        existingCategory.setName(newCategoryName);
         save(existingCategory);
     }
 

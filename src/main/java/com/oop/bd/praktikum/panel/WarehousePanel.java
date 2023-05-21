@@ -109,11 +109,9 @@ public class WarehousePanel {
                 if (newWarehouseName != null && !newWarehouseName.trim().isEmpty()
                         && !newWarehouseName.equals(
                         currentWarehouseName)) {
-                    WarehouseDTO warehouseDTO = warehouseController.getWarehouseByName(currentWarehouseName);
-                    warehouseDTO.setName(newWarehouseName);
 
                     // Update the category using the WarehouseController
-                    warehouseController.updateWarehouse(currentWarehouseName, warehouseDTO);
+                    warehouseController.updateWarehouse(currentWarehouseName, newWarehouseName);
 
                     // Update the JTable with new data
                     updateWarehouseTable(warehouseTableModel, warehouseController);

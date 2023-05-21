@@ -33,8 +33,8 @@ public class CategoryController {
         categoryService.createCategory(category);
     }
 
-    public void updateCategory(String currentName, CategoryDTO categoryDTO) {
-        categoryService.updateCategory(currentName, categoryDTO);
+    public void updateCategory(String currentName, String newCategoryName) {
+        categoryService.updateCategory(currentName, newCategoryName);
     }
 
     public void deleteCategory(String name) throws NotFoundException {

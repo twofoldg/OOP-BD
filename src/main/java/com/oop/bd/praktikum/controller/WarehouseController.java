@@ -33,20 +33,13 @@ public class WarehouseController {
         warehouseService.save(warehouse);
     }
 
-    public void updateWarehouse(String currentName, WarehouseDTO warehouseDTO) {
-        Warehouse existingWarehouse = warehouseService.findWarehouseByName(currentName);
-        existingWarehouse.setName(warehouseDTO.getName());
-        warehouseService.save(existingWarehouse);
+    public void updateWarehouse(String currentName, String newWarehouseName) {
+        warehouseService.updateWarehouse(currentName, newWarehouseName);
     }
 
     public void deleteWarehouse(String name) throws NotFoundException {
         Warehouse warehouse = warehouseService.findWarehouseByName(name);
 
         warehouseService.deleteById(warehouse.getId());
-    }
-
-    public WarehouseDTO getWarehouseByName(String warehouseName) {
-        Warehouse warehouse = warehouseService.findWarehouseByName(warehouseName);
-        return modelMapper.map(warehouse, WarehouseDTO.class);
     }
 }
